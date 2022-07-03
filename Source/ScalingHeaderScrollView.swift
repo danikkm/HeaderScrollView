@@ -13,7 +13,7 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     
     /// Content on the top, which will be collapsed
     public var header: Header
-
+    
     /// Content on the bottom
     public var content: Content
     
@@ -25,42 +25,44 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     
     /// UIScrollView delegate, needed for calling didPullToRefresh or didEndDragging
     @StateObject private var scrollViewDelegate = ScalingHeaderScrollViewDelegate()
-
+    
     /// ScrollView's header frame, needed for calculation of frame changing
-//    @StateObject private var headerFrame = ViewFrame()
-
+    //    @StateObject private var headerFrame = ViewFrame()
+    
     /// ScrollView's content frame, needed for calculation of frame changing
     @StateObject private var contentFrame = ViewFrame()
-
+    
     /// Interpolation from 0 to 1 of current collapse progress
     @Binding private var progress: CGFloat
-
+    
     /// Automatically sets to true, if pull to refresh is triggered. Manually set to false to hide loading indicator.
     @Binding private var isLoading: Bool
-
+    
     /// Set to true to immediately scroll to top
     @Binding private var scrollToTop: Bool
-
+    
     /// Called once pull to refresh is triggered
     private var didPullToRefresh: (() -> Void)?
-
+    
     /// Height for uncollapsed state
     private var maxHeight: CGFloat = 350.0
-
+    
     /// Height for collapsed state
     private var minHeight: CGFloat = 150.0
-
+    
     /// Allow collapsing while scrolling up
     private var allowsHeaderCollapseFlag: Bool = false
-
+    
     /// Allow enlarging while pulling down
     private var allowsHeaderGrowthFlag: Bool = false
-
+    
     /// Allow force snap to closest position after lifting the finger, i.e. forbid to be left in unfinished state
     private var allowsHeaderSnapFlag: Bool = false
     
+    private var color: Color?
+    
     /// Private computed properties
-
+    
     private var noPullToRefresh: Bool {
         didPullToRefresh == nil
     }
@@ -72,12 +74,12 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     private var progressViewOffset: CGFloat {
         isLoading ? maxHeight + 24.0 : maxHeight
     }
-
+    
     /// height for header: reduced if reducing is allowed, or fixed if not
     private var headerHeight: CGFloat {
         allowsHeaderCollapseFlag ? getHeightForHeaderView() : maxHeight
     }
-
+    
     /// Scaling for header: to enlarge while pulling down
     private var headerScaleOnPullDown: CGFloat {
         noPullToRefresh && allowsHeaderGrowthFlag ? max(1.0, getHeightForHeaderView() / maxHeight * 0.9) : 1.0
@@ -89,12 +91,13 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     
     // MARK: - Init
     
-    public init(@ViewBuilder header: @escaping () -> Header, @ViewBuilder content: @escaping () -> Content) {
+    public init(color: Color? = nil, @ViewBuilder header: @escaping () -> Header, @ViewBuilder content: @escaping () -> Content) {
         self.header = header()
         self.content = content()
         _progress = .constant(0)
         _isLoading = .constant(false)
         _scrollToTop = .constant(false)
+        self.color = color
     }
     
     // MARK: - Body builder
@@ -162,6 +165,11 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
             }
         }
         uiScrollView = scrollView
+        
+        if let color = color {
+            uiScrollView?.backgroundColor = UIColor(color)
+        }
+        
     }
     
     // MARK: - Private actions
@@ -220,10 +228,10 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     }
 }
 
-// MARK: - Modifiers 
+// MARK: - Modifiers
 
 extension ScalingHeaderScrollView {
-
+    
     /// Passes current collapse progress value into progress binding
     public func collapseProgress(_ progress: Binding<CGFloat>) -> ScalingHeaderScrollView {
         var scalingHeaderScrollView = self
@@ -260,7 +268,7 @@ extension ScalingHeaderScrollView {
         scalingHeaderScrollView.allowsHeaderCollapseFlag = true
         return scalingHeaderScrollView
     }
-
+    
     /// When scrolling down - enable/disable header scale
     public func allowsHeaderGrowth() -> ScalingHeaderScrollView {
         var scalingHeaderScrollView = self
