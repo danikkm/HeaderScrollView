@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-class ViewFrame: ObservableObject {
+final class ViewFrame: ObservableObject {
 
     var startingRect: CGRect?
 

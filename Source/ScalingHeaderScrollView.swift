@@ -59,6 +59,7 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     /// Allow force snap to closest position after lifting the finger, i.e. forbid to be left in unfinished state
     private var allowsHeaderSnapFlag: Bool = false
     
+    /// ScrollView's background color
     private var color: Color?
     
     /// Private computed properties
@@ -91,13 +92,15 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     
     // MARK: - Init
     
-    public init(color: Color? = nil, @ViewBuilder header: @escaping () -> Header, @ViewBuilder content: @escaping () -> Content) {
+    public init(
+        @ViewBuilder header: @escaping () -> Header,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
         self.header = header()
         self.content = content()
         _progress = .constant(0)
         _isLoading = .constant(false)
         _scrollToTop = .constant(false)
-        self.color = color
     }
     
     // MARK: - Body builder
@@ -149,27 +152,30 @@ public struct ScalingHeaderScrollView<Header: View, Content: View>: View {
     
     private func configure(scrollView: UIScrollView) {
         scrollView.delegate = scrollViewDelegate
+        
+        if let color = color {
+            uiScrollView?.backgroundColor = UIColor(color)
+        }
+        
         if let didPullToRefresh = didPullToRefresh {
             scrollViewDelegate.didPullToRefresh = {
                 withAnimation { isLoading = true }
                 didPullToRefresh()
             }
         }
+        
         scrollViewDelegate.didScroll = {
             self.progress = getCollapseProgress()
         }
+        
         scrollViewDelegate.didEndDragging = {
             isSpinning = false
             if allowsHeaderSnapFlag {
                 snapScrollPosition()
             }
         }
+        
         uiScrollView = scrollView
-        
-        if let color = color {
-            uiScrollView?.backgroundColor = UIColor(color)
-        }
-        
     }
     
     // MARK: - Private actions
@@ -280,6 +286,13 @@ extension ScalingHeaderScrollView {
     public func allowsHeaderSnap() -> ScalingHeaderScrollView {
         var scalingHeaderScrollView = self
         scalingHeaderScrollView.allowsHeaderSnapFlag = true
+        return scalingHeaderScrollView
+    }
+    
+    /// Changes background color
+    public func backgroundColor(_ backgroundColor: Color) -> ScalingHeaderScrollView {
+        var scalingHeaderScrollView = self
+        scalingHeaderScrollView.color = backgroundColor
         return scalingHeaderScrollView
     }
 }

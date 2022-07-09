@@ -11,8 +11,8 @@ import UIKit
 final class ScalingHeaderScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDelegate {
     
     var didPullToRefresh: () -> Void = { }
-    var didScroll: () -> Void = {}
-    var didEndDragging = {}
+    var didScroll: () -> Void = { }
+    var didEndDragging = { }
 
     // MARK: - UIScrollViewDelegate
 
