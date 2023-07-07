@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@MainActor
 final class ViewFrame: ObservableObject {
 
     var startingRect: CGRect?
@@ -15,7 +16,7 @@ final class ViewFrame: ObservableObject {
     @Published var frame: CGRect {
         willSet {
             if newValue.minY == 0 && newValue != startingRect {
-                startingRect = newValue
+                self.startingRect = newValue
             }
         }
     }
@@ -31,6 +32,11 @@ extension View {
     }
 }
 
+struct FrameRectPreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
+}
+
 struct FrameGetter: ViewModifier {
 
     @Binding var frame: CGRect
@@ -38,16 +44,15 @@ struct FrameGetter: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(
-                GeometryReader { proxy -> AnyView in
-                    let rect = proxy.frame(in: .global)
-                    // This avoids an infinite layout loop
-                    if rect.integral != self.frame.integral {
-                        DispatchQueue.main.async {
-                            self.frame = rect
-                        }
-                    }
-                    return AnyView(EmptyView())
+                GeometryReader { proxy in
+                    EmptyView()
+                        .preference(key: FrameRectPreferenceKey.self, value: proxy.frame(in: .global))
                 }
             )
+            .onPreferenceChange(FrameRectPreferenceKey.self) { rect in
+                if rect.integral != self.frame.integral {
+                    self.frame = rect
+                }
+            }
     }
 }

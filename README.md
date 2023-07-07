@@ -1,4 +1,4 @@
-<img src="https://github.com/exyte/media/blob/master/common/header.png">
+<img src="https://raw.githubusercontent.com/exyte/media/master/common/header.png">
 <p float="left">
   <img src="https://raw.githubusercontent.com/exyte/media/master/ScalingHeaderScrollView/1.gif" width="200" />
   <img src="https://raw.githubusercontent.com/exyte/media/master/ScalingHeaderScrollView/2.gif" width="200" /> 
@@ -17,13 +17,12 @@ ___
 
 <a href="https://exyte.com/contacts"><img src="https://i.imgur.com/vGjsQPt.png" width="134" height="34"></a> <a href="https://twitter.com/exyteHQ"><img src="https://i.imgur.com/DngwSn1.png" width="165" height="34"></a>
 
-</br>
-
-[![Twitter](https://img.shields.io/badge/Twitter-@exyteHQ-blue.svg?style=flat)](http://twitter.com/exyteHQ)
-[![Version](https://img.shields.io/cocoapods/v/ScalingHeaderScrollView.svg?style=flat)](http://cocoapods.org/pods/ScalingHeaderScrollView)
-[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-0473B3.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![License](https://img.shields.io/cocoapods/l/ScalingHeaderScrollView.svg?style=flat)](http://cocoapods.org/pods/ScalingHeaderScrollView)
-[![Platform](https://img.shields.io/cocoapods/p/ScalingHeaderScrollView.svg?style=flat)](http://cocoapods.org/pods/ScalingHeaderScrollView)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fexyte%2FScalingHeaderScrollView%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/exyte/ScalingHeaderScrollView)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fexyte%2FScalingHeaderScrollView%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/exyte/ScalingHeaderScrollView)
+[![SPM Compatible](https://img.shields.io/badge/SwiftPM-Compatible-brightgreen.svg)](https://swiftpackageindex.com/exyte/ScalingHeaderScrollView)
+[![Cocoapods Compatible](https://img.shields.io/badge/cocoapods-Compatible-brightgreen.svg)](https://cocoapods.org/pods/ScalingHeaderScrollView)
+[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](https://opensource.org/licenses/MIT)
 
 # Usage
 1. Put your header and content bodies code into a ScalingHeaderScrollView constructor.     
@@ -56,29 +55,50 @@ passes current collapse progress value into progress binding: 0 for not collapse
 ```swift
 .collapseProgress(_ progress: Binding<CGFloat>)
 ```
+
 allows set up callback and `isLoading` state for pull-to-refresh action   
 ```swift
 .pullToRefresh(isLoading: Binding<Bool>, perform: @escaping () -> Void)
 ```
+
  allows content scroll reset, need to change Binding to `true`  
 ```swift
 .scrollToTop(resetScroll: Binding<Bool>)
 ```
+
  changes min and max heights of Header, default `min = 150.0` and `max = 350.0`  
 ```swift
 .height(min: CGFloat = 150.0, max: CGFloat = 350.0)
 ```
+
 when scrolling up - switch between actual header collapse and simply moving it up (by default moving up)
 ```swift
 .allowsHeaderCollapse()
 ```
+
 when scrolling down - enable (disabled by default) header scale    
 ```swift
 .allowsHeaderGrowth()
 ```
+
 enable (disabled by default) header snap (once you lift your finger header snaps either to min or max height automatically)     
 ```swift
 .allowsHeaderSnap()
+```
+
+Set custom positions for header snap (explained previous point). Specify any amount of values in 0...1 to set snapping points, 0 - fully collapsed header, 1 - fully expanded  
+```swift
+.headerSnappingPositions(snapPositions: [CGFloat])
+```
+
+Set custom initial position to which scroll view will be automatically snapped to. Specify a value in 0...1, 0 - fully collapsed header, 1 - fully expanded  
+```swift
+.initialSnapPosition(initialSnapPosition: CGFloat)
+```
+
+hide scroll indicators (false by default)  
+```swift
+.hideScrollIndicators()
 ```
 
 ## Examples
@@ -91,6 +111,14 @@ To try ScalingHeaderScrollView examples:
 - Try it!
 
 ## Installation
+
+### [Swift Package Manager](https://swift.org/package-manager/)
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/exyte/ScalingHeaderScrollView.git")
+]
+```
 
 ### [CocoaPods](http://cocoapods.org)
 
@@ -108,15 +136,21 @@ To integrate `ScalingHeaderScrollView` into your Xcode project using Carthage, s
 github "Exyte/ScalingHeaderScrollView"
 ```
 
-### [Swift Package Manager](https://swift.org/package-manager/)
-
-```swift
-dependencies: [
-    .package(url: "https://github.com/exyte/ScalingHeaderScrollView.git", from: "1.0.0")
-]
-```
-
 ## Requirements
 
 * iOS 14+
 * Xcode 12+ 
+
+## Our other open source SwiftUI libraries
+[PopupView](https://github.com/exyte/PopupView) - Toasts and popups library    
+[Grid](https://github.com/exyte/Grid) - The most powerful Grid container         
+[AnimatedTabBar](https://github.com/exyte/AnimatedTabBar) - A tabbar with number of preset animations     
+[MediaPicker](https://github.com/exyte/mediapicker) - Customizable media picker     
+[Chat](https://github.com/exyte/chat) - Chat UI framework with fully customizable message cells, input view, and a built-in media picker      
+[ConcentricOnboarding](https://github.com/exyte/ConcentricOnboarding) - Animated onboarding flow    
+[FloatingButton](https://github.com/exyte/FloatingButton) - Floating button menu    
+[ActivityIndicatorView](https://github.com/exyte/ActivityIndicatorView) - A number of animated loading indicators    
+[ProgressIndicatorView](https://github.com/exyte/ProgressIndicatorView) - A number of animated progress indicators    
+[SVGView](https://github.com/exyte/SVGView) - SVG parser    
+[LiquidSwipe](https://github.com/exyte/LiquidSwipe) - Liquid navigation animation    
+
